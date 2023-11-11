@@ -1,23 +1,20 @@
-export type ContextRequestLine = {
-  method: string,
-  path: string;
-  protocol: string;
-};
 
 export type Context = {
-  requestLine: ContextRequestLine;
-  headers: any;
+  headers: Record<string, string>;
   host: string;
+  method: string,
+  path: string;
+  port: number;
+  protocol: string;
   userAgent: string;
 };
 
 export const createContext = (): Context => ({
-  "requestLine": {
-    "method": "",
-    "path": "",
-    "protocol": "",
-  },
   "headers": {},
   "host": "",
+  "method": "",
+  "path": "",
+  "port": 0,
+  "protocol": "",
   "userAgent": "",
 });

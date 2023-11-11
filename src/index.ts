@@ -1,25 +1,33 @@
-import config from './config';
-import { createServer, type Socket } from 'net';
-import { socketParser } from './socket';
-import { createContext } from './context';
+import config from "./config";
+import { createContext } from "./context";
+import { parseRequestLine, parseServerLine } from "./parser";
+import { createServer, type Socket } from "net";
 
 const server = createServer();
 
-server.on('connection', (socket: Socket) => {
+server.on("connection", (socket: Socket) => {
 
   const context = createContext();
 
-  socket.on('data', (data: Buffer) => {
-    const [line, host, headers] = data.toString('utf-8').split('\r\n');
+  socket.on("data", (buffer: Buffer) => {
 
-    const { method } = socketParser.parseRequestLine(line);
+    const data = buffer.toString("utf-8");
 
-    }).on('connect', function() {
-        socket.write("GET /rest/whoami HTTP/1.1\r\n\r\n");
-        console.log('SOCKET GET REQUEST SEND');
-    }).on('end', function() {
-        console.log('SOCKET ENDED');
-    });
+    const [requestLine, serverLine, ...rest] = data.split("\r\n");
+
+    const { method, path, protocol } = parseRequestLine(requestLine);
+
+    const { host, port } = parseServerLine(serverLine);
+
+    context.host = host;
+    context.method = method;
+    context.path = path;
+    context.protocol = protocol;
+    context.port = port;
+
+    console.log({ context });
+
+  });
 
 });
 
