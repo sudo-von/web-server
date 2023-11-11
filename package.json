@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/sudo-von/web-server/issues"
   },
-  "homepage": "https://github.com/sudo-von/web-server#readme"
+  "homepage": "https://github.com/sudo-von/web-server#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.0",
+    "@commitlint/config-conventional": "^18.4.0",
+    "husky": "^8.0.3"
+  }
 }
