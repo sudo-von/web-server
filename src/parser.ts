@@ -4,7 +4,7 @@ const supportedMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
 const supportedProtocols = ["HTTP/1.1"];
 
-export const parseRequestLine = (requestLine: string) => {
+export const parseHttpLine = (requestLine: string) => {
   const data = requestLine.split(" ");
 
   if (data.length !== 3) throw new MalformedDataError();
@@ -32,4 +32,33 @@ export const parseServerLine = (serverLine: string) => {
     host,
     port: parseInt(port)
   }
+};
+
+export const parseHeaderLine = (headerLine: string) => {
+
+  const headers = headerLine.split(': ');
+
+  if (headers.length !== 2) return;
+
+  const [name, value] = headers;
+
+  if (!name || !value) return;
+
+  if (!/^[a-zA-Z0-9-]+$/.test(name)) throw new MalformedDataError();
+
+  return { name, value };
+};
+
+export const parseHeaders = (headerLines: string[]) => {
+  const headers = headerLines.map(headerLine => parseHeaderLine(headerLine));
+
+  const headersObject: Record<string, string> = {};
+
+  for (const header of headers) {
+    if (header) {
+      headersObject[header.name] = header.value;
+    }
+  }
+
+  return headersObject;
 };

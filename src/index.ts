@@ -1,7 +1,7 @@
 import config from "./config";
 import { createContext } from "./context";
-import { parseRequestLine, parseServerLine } from "./parser";
 import { createServer, type Socket } from "net";
+import { parseHeaders, parseHttpLine, parseServerLine } from "./parser";
 
 const server = createServer();
 
@@ -13,20 +13,22 @@ server.on("connection", (socket: Socket) => {
 
     const data = buffer.toString("utf-8");
 
-    const [requestLine, serverLine, ...rest] = data.split("\r\n");
+    const [httpLine, serverLine, ...rest] = data.split("\r\n");
 
-    const { method, path, protocol } = parseRequestLine(requestLine);
+    const { method, path, protocol } = parseHttpLine(httpLine);
 
     const { host, port } = parseServerLine(serverLine);
 
+    const headers = parseHeaders(rest);
+
+    context.headers = headers;
     context.host = host;
     context.method = method;
     context.path = path;
-    context.protocol = protocol;
     context.port = port;
+    context.protocol = protocol;
 
     console.log({ context });
-
   });
 
 });

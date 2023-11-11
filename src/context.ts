@@ -2,11 +2,10 @@
 export type Context = {
   headers: Record<string, string>;
   host: string;
-  method: string,
+  method: string;
   path: string;
   port: number;
   protocol: string;
-  userAgent: string;
 };
 
 export const createContext = (): Context => ({
@@ -16,5 +15,4 @@ export const createContext = (): Context => ({
   "path": "",
   "port": 0,
   "protocol": "",
-  "userAgent": "",
 });
